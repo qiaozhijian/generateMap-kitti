@@ -66,20 +66,25 @@ void readKittiPclBinData(std::string &in_file, pcl::PointCloud<PointType>::Ptr c
     input.close();
 }
 
-Eigen::Matrix4f toVelodyneCoord(Eigen::Matrix4f pose_cam) {
-    Eigen::Matrix4f T_c_v = Eigen::Matrix4f::Identity();
-    T_c_v << 4.276802385584e-04, -9.999672484946e-01, -8.084491683471e-03, -1.198459927713e-02, -7.210626507497e-03, \
-             8.081198471645e-03, -9.999413164504e-01, -5.403984729748e-02, 9.999738645903e-01, 4.859485810390e-04, \
-             -7.206933692422e-03, -2.921968648686e-01, 0, 0, 0, 1;
-    Eigen::Matrix4f pose_vel = T_c_v.inverse() * pose_cam * T_c_v;
+Eigen::Matrix4d toVelodyneCoord(Eigen::Matrix4d pose_cam) {
+    Eigen::Matrix4d T_c_v = Eigen::Matrix4d::Identity();
+//    T_c_v << 4.276802385584e-04, -9.999672484946e-01, -8.084491683471e-03, -1.198459927713e-02, \
+//    -7.210626507497e-03, 8.081198471645e-03, -9.999413164504e-01, -5.403984729748e-02, \
+//    9.999738645903e-01, 4.859485810390e-04, -7.206933692422e-03, -2.921968648686e-01, \
+//    0, 0, 0, 1;
+    T_c_v << 7.533745e-03, -9.999714e-01, -6.166020e-04, -4.069766e-03, \
+    1.480249e-02, 7.280733e-04, -9.998902e-01, -7.631618e-02, \
+    9.998621e-01, 7.523790e-03, 1.480755e-02, -2.717806e-01, \
+    0, 0, 0, 1;
+    Eigen::Matrix4d pose_vel = T_c_v.inverse() * pose_cam * T_c_v;
     return pose_vel;
 }
 
-Eigen::Matrix4f relativeTrans(Eigen::Matrix4f prev, Eigen::Matrix4f cur) {
+Eigen::Matrix4d relativeTrans(Eigen::Matrix4d prev, Eigen::Matrix4d cur) {
     return cur * prev.inverse();
 }
 
-void loadPoses(string file_name, vector<Eigen::Matrix4f> &poses) {
+void loadPoses(string file_name, vector<Eigen::Matrix4d> &poses) {
 
 //    计算有多少个位姿
     FILE *fp_ = fopen(file_name.c_str(), "r");
@@ -104,7 +109,7 @@ void loadPoses(string file_name, vector<Eigen::Matrix4f> &poses) {
     FILE *fp = fopen(file_name.c_str(), "r");
     int i, j = 0;
     while (!feof(fp)) {
-        Matrix4f P = Eigen::Matrix4f::Identity();
+        Matrix4d P = Eigen::Matrix4d::Identity();
         float val[12] = {0.f};
         if (fscanf(fp, "%f %f %f %f %f %f %f %f %f %f %f %f",
                    val + 0, val + 1, val + 2, val + 3,

@@ -11,9 +11,5 @@
 #include <string>
 
 typedef pcl::PointXYZI PointType;
-extern const std::string pointCloudTopic = "/velodyne_points";
-extern const std::string imuTopic = "/imu/data";
-
-extern const float nearSubMapSearchRadius = 25.0;
 
 #endif //SRC_SELFDEFINE_H
