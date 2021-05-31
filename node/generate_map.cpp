@@ -65,7 +65,11 @@ public:
 
             if(idx % 40 == 0){
                 printf("process %d\n", idx);
-                FilterGlobalAreas(downSizeFilterGlobalMap, GlobalMapDS, GlobalMapDS);
+//                cout<<"size before: "<<GlobalMapDS->size()<<endl;
+                downSizeFilterGlobalMap.setInputCloud(GlobalMapDS);                //设置待滤波的点云
+                downSizeFilterGlobalMap.filter(*GlobalMapDS);               //滤波并存储
+//                FilterGlobalAreas(downSizeFilterGlobalMap, GlobalMapDS, GlobalMapDS);
+//                cout<<"size after: "<<GlobalMapDS->size()<<endl;
             }
             clearCloud();
         }
@@ -136,8 +140,8 @@ public:
         nanPoint.y = std::numeric_limits<float>::quiet_NaN();
         nanPoint.z = std::numeric_limits<float>::quiet_NaN();
 
-        downSizeFilter.setLeafSize(0.1, 0.1, 0.1);//设置栅格大小，单位：m
-        downSizeFilterGlobalMap.setLeafSize(0.1, 0.1, 0.1);//设置栅格大小，单位：m
+        downSizeFilter.setLeafSize(0.3, 0.3, 0.3);//设置栅格大小，单位：m
+        downSizeFilterGlobalMap.setLeafSize(0.5, 0.5, 0.5);//设置栅格大小，单位：m
 
         passThroughFilter.setFilterFieldName("z");             //设置在Z轴方向上进行滤波
         passThroughFilter.setFilterLimits(-2.f, 1000.f);
